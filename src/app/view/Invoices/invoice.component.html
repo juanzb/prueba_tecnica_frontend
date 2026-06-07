@@ -1,0 +1,26 @@
+@let invoices = this.dataInvoices();
+
+<section class="w-full h-full flex items-center justify-around gap-4 p-4 bg-slate-900">
+  <div
+    class="w-1/4 h-full flex flex-col gap-3 bg-slate-400/30 p-4 rounded-2xl hover:-translate-y-1 transform transition-all duration-300 backdrop-blur-md border border-white/10 shadow-xl"
+  >
+    <div class="text-white font-semibold tracking-wide">Lista de facturas</div>
+    <div class="flex flex-col gap-2">
+      @for (item of invoices; track $index) {
+        <app-card-invoice [invoiceGet]="item" />
+      }
+    </div>
+  </div>
+
+  <div
+    class="w-1/4 h-full flex flex-col justify-between gap-3 bg-slate-400/30 p-4 rounded-2xl hover:-translate-y-1 transform transition-all duration-300 backdrop-blur-md border border-white/10 shadow-xl"
+  >
+    <div class="text-white font-semibold tracking-wide">Detalle de factura</div>
+  </div>
+
+  <div
+    class="w-2/4 h-full flex flex-col justify-between gap-3 bg-slate-400/30 p-4 rounded-2xl hover:-translate-y-1 transform transition-all duration-300 backdrop-blur-md border border-white/10 shadow-xl"
+  >
+    <div class="text-white font-semibold tracking-wide">Nueva factura</div>
+  </div>
+</section>
