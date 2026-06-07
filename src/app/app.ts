@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '@components/ui/header/header.component';
+import { InvoiceComponent } from '@view/Invoices/Invoice.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [InvoiceComponent],
   templateUrl: './app.html',
 })
 export class App {}
