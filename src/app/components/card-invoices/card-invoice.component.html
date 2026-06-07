@@ -2,68 +2,59 @@
 @let active = isSelected();
 
 <div
-  class="group relative rounded-2xl p-4 transition-all duration-300 overflow-hidden"
+  class="group relative rounded-2xl p-4 transition-all duration-300 overflow-hidden cursor-pointer"
   [class]="
     active
-      ? 'bg-indigo-50/50 border-2 border-indigo-400 shadow-md shadow-indigo-100'
-      : 'bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300'
+      ? 'bg-indigo-900/40 border-2 border-indigo-400/80 shadow-lg shadow-indigo-500/10'
+      : 'bg-slate-800/40 border border-white/5 shadow-sm hover:shadow-md hover:bg-slate-700/50 hover:border-white/10'
   "
 >
-  <!-- Cabecera de la tarjeta: Título, ID y Toggle -->
-  <div class="flex justify-between items-start gap-3">
-    <div class="flex-1 min-w-0">
-      <div class="flex items-center gap-2 mb-1.5">
+  <!-- Cabecera -->
+  <div class="flex flex-col items-start gap-1">
+    <div class="w-full flex flex-row justify-between items-start">
+      <div class="flex items-center gap-2">
         <span
-          class="bg-indigo-50 border-indigo-100 text-indigo-700 text-xs font-black px-2 py-0.5 rounded-md font-mono"
+          class="bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[10px] font-black px-2 py-0.5 rounded-md font-mono shadow-inner"
         >
           #{{ inv.id }}
         </span>
-        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-          {{ 'dd/MM/yyyy' }}
-        </span>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-bold text-slate-100 truncate" title="Orden Principal">
+            Orden Principal
+          </h3>
+        </div>
       </div>
-
-      <!-- Nombre de la Orden -->
-      <h3 class="text-sm font-bold text-slate-800 truncate" title="{{ 'Orden Principal' }}">
-        {{ 'Orden Principal' }}
-      </h3>
-
-      <!-- Descripción -->
-      <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-        {{ 'Detalle de la compra de productos y servicios asociados a la orden principal.' }}
-      </p>
-    </div>
-
-    <!-- Botón Toggle (Evita que el click se propague si es necesario) -->
-    <div class="shrink-0 pt-0.5" (click)="$event.stopPropagation()">
-      <app-button-toggle
-        textActive="ocultar detalle"
-        textInactive="mostra detalle"
-        [isActive]="false"
-        (isActiveChange)="checkInvoiceActive($event)"
-      />
+      <div class="flex items-center gap-2">
+        <div class="shrink-0" (click)="$event.stopPropagation()">
+          <app-button-toggle
+            textActive="ocultar"
+            textInactive="ver"
+            [isActive]="active"
+            (isActiveChange)="checkInvoiceActive(inv.id)"
+          />
+        </div>
+        <div class="shrink-0" (click)="$event.stopPropagation()">
+          <app-button (click)="deleteInvoice(inv.id)" />
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Divisor con estilo punteado -->
-  <div class="border-t border-slate-200 border-dashed my-3.5"></div>
+  <div class="border-t border-white/5 border-dashed my-1"></div>
 
-  <!-- Pie de la Tarjeta: Valores Financieros -->
+  <!-- Subtotal y Total -->
   <div class="flex justify-between items-end">
-    <!-- Subtotal -->
     <div>
-      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Subtotal</p>
-      <p class="text-sm font-semibold text-slate-600">
+      <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Subtotal</p>
+      <p class="text-xs font-semibold text-slate-300">
         {{ inv.subtotal | currency: 'COP' : 'symbol' : '1.0-0' }}
       </p>
     </div>
-
-    <!-- Total (Destacado) -->
     <div class="text-right">
-      <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-0.5">
+      <p class="text-[9px] font-bold text-indigo-400 uppercase tracking-widest mb-0.5">
         Total Neto
       </p>
-      <p class="text-lg font-black text-indigo-700 leading-none">
+      <p class="text-base font-black text-white drop-shadow-md">
         {{ inv.totalAmount | currency: 'COP' : 'symbol' : '1.0-0' }}
       </p>
     </div>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-confirm',
-  templateUrl: './modal-confirm.html',
+  templateUrl: './modal-confirm.component.html',
   standalone: true,
   imports: [CommonModule],
 })
