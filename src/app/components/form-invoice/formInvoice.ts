@@ -68,7 +68,6 @@ export class FromInvoiceComponent {
       details,
     };
 
-    console.log(newInvoice);
     this.onSave.emit(newInvoice);
 
     this.clientName.set('');

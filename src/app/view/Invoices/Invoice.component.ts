@@ -99,7 +99,6 @@ export class InvoiceComponent implements OnInit {
   }
 
   onRecalculate(event: IRecalculatedInvoice) {
-    console.log('action final:>> ', event);
     this.invoiceRepository
       .saveRecalculateInvoice(event, `invoices/${this.idInvoiceToShow()}/recalculate-save`)
       .then(() => {
