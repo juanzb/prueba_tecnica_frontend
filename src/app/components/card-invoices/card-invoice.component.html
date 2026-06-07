@@ -1,0 +1,71 @@
+@let inv = invoiceGet();
+@let active = isSelected();
+
+<div
+  class="group relative rounded-2xl p-4 transition-all duration-300 overflow-hidden"
+  [class]="
+    active
+      ? 'bg-indigo-50/50 border-2 border-indigo-400 shadow-md shadow-indigo-100'
+      : 'bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300'
+  "
+>
+  <!-- Cabecera de la tarjeta: Título, ID y Toggle -->
+  <div class="flex justify-between items-start gap-3">
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1.5">
+        <span
+          class="bg-indigo-50 border-indigo-100 text-indigo-700 text-xs font-black px-2 py-0.5 rounded-md font-mono"
+        >
+          #{{ inv.id }}
+        </span>
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+          {{ 'dd/MM/yyyy' }}
+        </span>
+      </div>
+
+      <!-- Nombre de la Orden -->
+      <h3 class="text-sm font-bold text-slate-800 truncate" title="{{ 'Orden Principal' }}">
+        {{ 'Orden Principal' }}
+      </h3>
+
+      <!-- Descripción -->
+      <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+        {{ 'Detalle de la compra de productos y servicios asociados a la orden principal.' }}
+      </p>
+    </div>
+
+    <!-- Botón Toggle (Evita que el click se propague si es necesario) -->
+    <div class="shrink-0 pt-0.5" (click)="$event.stopPropagation()">
+      <app-button-toggle
+        textActive="ocultar detalle"
+        textInactive="mostra detalle"
+        [isActive]="false"
+        (isActiveChange)="checkInvoiceActive($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Divisor con estilo punteado -->
+  <div class="border-t border-slate-200 border-dashed my-3.5"></div>
+
+  <!-- Pie de la Tarjeta: Valores Financieros -->
+  <div class="flex justify-between items-end">
+    <!-- Subtotal -->
+    <div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Subtotal</p>
+      <p class="text-sm font-semibold text-slate-600">
+        {{ inv.subtotal | currency: 'COP' : 'symbol' : '1.0-0' }}
+      </p>
+    </div>
+
+    <!-- Total (Destacado) -->
+    <div class="text-right">
+      <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-0.5">
+        Total Neto
+      </p>
+      <p class="text-lg font-black text-indigo-700 leading-none">
+        {{ inv.totalAmount | currency: 'COP' : 'symbol' : '1.0-0' }}
+      </p>
+    </div>
+  </div>
+</div>
