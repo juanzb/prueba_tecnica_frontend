@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { IProduct } from '../../interfaces/IProducts';
-import { IInvoice, IInvoiceGet } from '../../interfaces/IInvoices';
+import { ICreateInvoice, IInvoice, IRecalculatedInvoice } from '../../interfaces/IInvoices';
 import { ProductsRepository } from '../../api/repositories/product.repository';
 import { InvoiceRepository } from '../../api/repositories/invoice.repository';
 import { CardInvoiceComponent } from '@components/card-invoices/card-invoice.component';
 import { CardInvoiceDetailComponent } from '@components/card-invoice-detail/card-invoice-detail.component';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ModalConfirmComponent } from '@components/ui/modal-confirm/modal-confirm.component';
 import { FromInvoiceComponent } from '@components/form-invoice/formInvoice';
 import { FormRecalculateComponent } from '@components/form-recalculate/form-recalculate.component';
@@ -18,6 +18,7 @@ import { FormRecalculateComponent } from '@components/form-recalculate/form-reca
     CardInvoiceComponent,
     CardInvoiceDetailComponent,
     CurrencyPipe,
+    DatePipe,
     ModalConfirmComponent,
     FromInvoiceComponent,
     FormRecalculateComponent,
@@ -25,7 +26,7 @@ import { FormRecalculateComponent } from '@components/form-recalculate/form-reca
 })
 export class InvoiceComponent implements OnInit {
   protected dataProducts = signal<IProduct[]>([]);
-  protected dataInvoices = signal<IInvoiceGet[]>([] as IInvoiceGet[]);
+  protected dataInvoices = signal<IInvoice[]>([] as IInvoice[]);
   isLoading = signal<boolean>(false);
   isError = signal<boolean>(false);
   idInvoiceToShow = signal<number>(0);
@@ -63,20 +64,9 @@ export class InvoiceComponent implements OnInit {
       });
   }
 
-  createInvoice(invoice: IInvoice) {
+  createInvoice(invoice: ICreateInvoice) {
     this.invoiceRepository
       .createInvoice(invoice)
-      .then(() => {
-        this.findDataInvoices();
-      })
-      .catch((error) => {
-        this.isError.set(true);
-      });
-  }
-
-  updateInvoice(invoice: IInvoice) {
-    this.invoiceRepository
-      .updateInvoice(invoice)
       .then(() => {
         this.findDataInvoices();
       })
@@ -106,5 +96,18 @@ export class InvoiceComponent implements OnInit {
       this.findDataInvoices();
     });
     this.openModalToDeleteInvoice.set(false);
+  }
+
+  onRecalculate(event: IRecalculatedInvoice) {
+    console.log('action final:>> ', event);
+    this.invoiceRepository
+      .saveRecalculateInvoice(event, `invoices/${this.idInvoiceToShow()}/recalculate-save`)
+      .then(() => {
+        this.findDataInvoices();
+        this.isRecalculate.set(false);
+      })
+      .catch((error) => {
+        this.isError.set(true);
+      });
   }
 }

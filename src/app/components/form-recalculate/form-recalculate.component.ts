@@ -1,9 +1,8 @@
-import { Component, computed, input, output, signal, effect } from '@angular/core';
+import { Component, computed, input, output, signal, effect, inject } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IInvoiceGet } from '../../interfaces/IInvoices';
-
-type UserType = 'OPERADOR' | 'SUPERVISOR';
+import { IInvoice, IRecalculatedInvoice, TUserType } from '../../interfaces/IInvoices';
+import { InvoiceRepository } from '../../api/repositories/invoice.repository';
 
 @Component({
   selector: 'app-form-recalculate',
@@ -12,11 +11,13 @@ type UserType = 'OPERADOR' | 'SUPERVISOR';
   imports: [CommonModule, FormsModule, CurrencyPipe],
 })
 export class FormRecalculateComponent {
-  invoice = input.required<IInvoiceGet>();
-  onRecalculated = output<any>();
-  userType = signal<UserType>('OPERADOR');
+  invoice = input.required<IInvoice>();
+  onRecalculated = output<IRecalculatedInvoice>();
+  userType = signal<TUserType>('OPERATOR');
   newSubtotalInput = signal<number | null>(0);
-  newDataInvoice = output<IInvoiceGet>();
+  newDataInvoice = output<IInvoice>();
+
+  invoiceRepository = inject(InvoiceRepository);
 
   validationError = computed(() => {
     const inv = this.invoice();
@@ -28,7 +29,7 @@ export class FormRecalculateComponent {
     const diff = newVal - inv.subtotal;
 
     if (diff > 0) {
-      if (this.userType() === 'OPERADOR' && diff > 20000) {
+      if (this.userType() === 'OPERATOR' && diff > 20000) {
         return `Operador (Tipo A) solo puede incrementar hasta $20,000. (Te pasaste por ${diff - 20000})`;
       }
       if (this.userType() === 'SUPERVISOR' && diff > 50000) {
@@ -87,18 +88,10 @@ export class FormRecalculateComponent {
   }
 
   protected saveRecalculate() {
-    const invoiceToSave: IInvoiceGet = {
-      id: this.invoice().id,
-      details: this.recalculatedDetails(),
-      subtotal: this.newSubtotalInput() ?? 0,
-      taxAmount: this.newTaxAmount(),
-      totalAmount: this.newTotalAmount(),
-    };
-    console.log('Factura recalculada guardada', {
-      newSubtotal: this.newSubtotalInput(),
-      newTax: this.newTaxAmount(),
-      newTotal: this.newTotalAmount(),
-      details: this.recalculatedDetails(),
+    if (!this.newSubtotalInput()) return;
+    this.onRecalculated.emit({
+      userRole: this.userType(),
+      newSubtotal: this.newSubtotalInput() ?? 0,
     });
   }
 }

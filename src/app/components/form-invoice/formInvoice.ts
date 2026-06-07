@@ -2,7 +2,7 @@ import { Component, computed, input, output, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IProduct } from '../../interfaces/IProducts';
-import { IInvoice, IDetailInvoice } from '../../interfaces/IInvoices';
+import { ICreateDetailInvoice, ICreateInvoice } from '../../interfaces/IInvoices';
 
 @Component({
   selector: 'app-form-invoice',
@@ -12,7 +12,7 @@ import { IInvoice, IDetailInvoice } from '../../interfaces/IInvoices';
 })
 export class FromInvoiceComponent {
   products = input.required<IProduct[]>();
-  onSave = output<IInvoice>();
+  onSave = output<ICreateInvoice>();
   clientName = signal<string>('');
   description = signal<string>('');
   cart = signal<(IProduct & { quantity: number })[]>([]);
@@ -56,21 +56,19 @@ export class FromInvoiceComponent {
   submit() {
     if (!this.clientName() || this.cart().length === 0) return;
 
-    const details: IDetailInvoice[] = this.cart().map((item) => ({
+    const details: ICreateDetailInvoice[] = this.cart().map((item) => ({
       productName: item.name,
       unitPrice: item.unitPrice,
       quantity: item.quantity,
     }));
 
-    const newInvoice: IInvoice = {
+    const newInvoice: ICreateInvoice = {
       client: this.clientName(),
-      date: new Date().toISOString(),
       description: this.description(),
-      subtotal: this.subtotal(),
-      total: this.total(),
       details,
     };
 
+    console.log(newInvoice);
     this.onSave.emit(newInvoice);
 
     this.clientName.set('');

@@ -1,31 +1,51 @@
 export interface IInvoice {
-  date: string;
-  client: string;
-  id?: number;
-  description?: string;
-  subtotal: number;
-  total: number;
-  details: IDetailInvoice[];
-}
-
-export interface IDetailInvoice {
-  productName: string;
-  unitPrice: number;
-  quantity: number;
-}
-
-export interface IInvoiceGet {
   id: number;
-  details: IInvoiceDetailGet[];
+  client: string;
+  description?: string;
   subtotal: number;
   taxAmount: number;
   totalAmount: number;
+  details: IInvoiceDetail[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface IInvoiceDetailGet {
+export type TUserType = 'OPERATOR' | 'SUPERVISOR';
+
+export interface IRecalculatedInvoice {
+  newSubtotal: number;
+  userRole: TUserType;
+}
+
+export interface IInvoiceDetail {
   id: number;
   productName: string;
   quantity: number;
   totalPrice: number;
   unitPrice: number;
+}
+
+export interface IUpdateInvoiceDetail {
+  productName?: string;
+  quantity?: number;
+  totalPrice?: number;
+  unitPrice?: number;
+}
+
+export interface ICreateInvoice {
+  client: string;
+  description?: string;
+  details: ICreateDetailInvoice[];
+}
+
+export interface ICreateDetailInvoice {
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface IUpdateInvoice {
+  client?: string;
+  description?: string;
+  details?: ICreateDetailInvoice[];
 }
