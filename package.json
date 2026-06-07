@@ -4,9 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start:dev": "ng serve -c development",
+    "start:prod": "ng serve -c production",
+    "build": "ng build -c production",
+    "watch": "ng build --watch -c development",
+    "test": "ng test",
+    "clean:imports": "ng generate @angular/core:cleanup-unused-imports",
+    "lint": "ng lint",
+    "lint:fix": "npx eslint src/**/*.ts --fix",
+    "format": "prettier --write ."
   },
   "prettier": {
     "printWidth": 100,
