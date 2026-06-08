@@ -16,7 +16,7 @@ RUN pnpm run build
 # Etapa 2: Servidor Web (Nginx)
 FROM nginx:stable-alpine3.23-perl
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY .docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist/prueba_tecnica_frontend/browser /usr/share/nginx/html
 
