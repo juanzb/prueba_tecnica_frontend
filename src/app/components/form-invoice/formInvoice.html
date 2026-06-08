@@ -55,7 +55,7 @@
             </div>
             <span
               class="text-[10px] font-black text-slate-300 bg-slate-900/50 px-2 py-1 rounded-md"
-              >{{ prod.unitPrice | currency: 'COP' : 'symbol' : '1.0-0' }}</span
+              >{{ prod.unitPrice | currency: 'COP' : 'symbol' : '1.0-2' }}</span
             >
           </div>
         }
@@ -94,7 +94,7 @@
                   >{{ item.name }}</span
                 >
                 <span class="text-[9px] text-emerald-400/80">{{
-                  item.unitPrice * item.quantity | currency: 'COP' : 'symbol' : '1.0-0'
+                  item.unitPrice * item.quantity | currency: 'COP' : 'symbol' : '1.0-2'
                 }}</span>
               </div>
 
@@ -159,7 +159,7 @@
             >Total Calculado (Inc. IVA)</span
           >
           <span class="text-sm font-black text-emerald-400 drop-shadow-sm">{{
-            total() | currency: 'COP' : 'symbol' : '1.0-0'
+            total() | currency: 'COP' : 'symbol' : '1.0-2'
           }}</span>
         </div>
         <button

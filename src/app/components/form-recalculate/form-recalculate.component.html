@@ -117,13 +117,13 @@
                 >{{ item.productName }}</span
               >
               <span class="text-xs text-slate-500 font-mono mt-0.5"
-                >unidad: {{ item.newUnitPrice | currency: 'COP' : 'symbol' : '1.0-0' }}</span
+                >unidad: {{ item.newUnitPrice | currency: 'COP' : 'symbol' : '1.0-2' }}</span
               >
             </div>
 
             <div class="flex flex-col items-end w-2/5">
               <span class="text-[13px] font-black text-white drop-shadow-sm">{{
-                item.newTotalPrice | currency: 'COP' : 'symbol' : '1.0-0'
+                item.newTotalPrice | currency: 'COP' : 'symbol' : '1.0-2'
               }}</span>
               @if (item.diff !== 0) {
                 <span
@@ -131,7 +131,7 @@
                   [class]="item.diff > 0 ? 'text-emerald-400' : 'text-rose-400'"
                 >
                   {{ item.diff > 0 ? '+' : ''
-                  }}{{ item.diff | currency: 'COP' : 'symbol' : '1.0-0' }}
+                  }}{{ item.diff | currency: 'COP' : 'symbol' : '1.0-2' }}
                 </span>
               } @else {
                 <span class="text-[9px] text-slate-600 font-bold uppercase tracking-widest mt-0.5"
@@ -151,10 +151,10 @@
           >
           <div class="text-right flex flex-col items-end">
             <span class="text-sm font-bold text-slate-400 font-mono tracking-widest"
-              >Sub: {{ newSubtotal | currency: 'COP' : 'symbol' : '1.0-0' }}</span
+              >Sub: {{ newSubtotal | currency: 'COP' : 'symbol' : '1.0-2' }}</span
             >
             <span class="text-lg font-black text-indigo-400 mt-0.5 drop-shadow-md tracking-tight"
-              >Total: {{ newTotalAmount() | currency: 'COP' : 'symbol' : '1.0-0' }}</span
+              >Total: {{ newTotalAmount() | currency: 'COP' : 'symbol' : '1.0-2' }}</span
             >
           </div>
         </div>

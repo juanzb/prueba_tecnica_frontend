@@ -21,21 +21,18 @@ export class FormRecalculateComponent {
 
   validationError = computed(() => {
     const inv = this.invoice();
-    if (!inv) return 'Seleccione una factura primero.';
+    if (!inv) return 'No hay factura seleccionada.';
 
     const newVal = this.newSubtotalInput();
-    if (newVal === null || newVal < 0) return 'Ingrese un subtotal válido.';
+    if (newVal === null || newVal <= 0) return 'Ingrese un subtotal válido.';
 
     const diff = newVal - inv.subtotal;
-    const absDiff = Math.abs(diff);
 
-    if (this.userType() === 'OPERATOR' && absDiff > 20000) {
-      const action = diff > 0 ? 'incrementar' : 'decrementar';
-      return `Operador (Tipo A) solo puede ${action} hasta $20,000. (Te pasaste por ${absDiff - 20000})`;
+    if (this.userType() === 'OPERATOR' && diff > 20000) {
+      return `Operador (Tipo A) solo puede incrementar hasta $20,000. (Te pasaste por ${Math.abs(diff) - 20000})`;
     }
-    if (this.userType() === 'SUPERVISOR' && absDiff > 50000) {
-      const action = diff > 0 ? 'incrementar' : 'decrementar';
-      return `Supervisor (Tipo B) solo puede ${action} hasta $50,000. (Te pasaste por ${absDiff - 50000})`;
+    if (this.userType() === 'SUPERVISOR' && diff > 50000) {
+      return `Supervisor (Tipo B) solo puede incrementar hasta $50,000. (Te pasaste por ${Math.abs(diff) - 50000})`;
     }
 
     return null;
@@ -90,7 +87,6 @@ export class FormRecalculateComponent {
   }
 
   protected saveRecalculate() {
-    if (!this.newSubtotalInput()) return;
     this.onRecalculated.emit({
       userRole: this.userType(),
       newSubtotal: this.newSubtotalInput() ?? 0,

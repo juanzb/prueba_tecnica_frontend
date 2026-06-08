@@ -47,7 +47,7 @@
     <div>
       <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Subtotal</p>
       <p class="text-xs font-semibold text-slate-300">
-        {{ inv.subtotal | currency: 'COP' : 'symbol' : '1.0-0' }}
+        {{ inv.subtotal | currency: 'COP' : 'symbol' : '1.0-2' }}
       </p>
     </div>
     <div class="text-right">
@@ -55,7 +55,7 @@
         Total Neto
       </p>
       <p class="text-base font-black text-white drop-shadow-md">
-        {{ inv.totalAmount | currency: 'COP' : 'symbol' : '1.0-0' }}
+        {{ inv.totalAmount | currency: 'COP' : 'symbol' : '1.0-2' }}
       </p>
     </div>
   </div>
