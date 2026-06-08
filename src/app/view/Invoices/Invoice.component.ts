@@ -14,7 +14,11 @@ import { toast } from 'ngx-sonner';
 type InvoiceUpdateAction =
   | { type: 'add'; payload: IInvoice }
   | { type: 'recalculate'; payload: IInvoice }
-  | { type: 'delete'; payload: number }; // Solo pedimos el ID aquí
+  | { type: 'delete'; payload: number };
+
+type TValidateError = { feature: TFeatures; message?: string; error: any };
+
+type TFeatures = 'Productos' | 'Facturas';
 
 @Component({
   selector: 'app-invoice',
@@ -58,9 +62,10 @@ export class InvoiceComponent implements OnInit {
         this.dataProducts.set(res.data);
       })
       .catch((error) => {
-        //console.log(error);
-        toast.error('Productos', {
-          description: error.error.error || 'Error al cargar, por favor recargar la página',
+        this.validateErrorResponse({
+          feature: 'Productos',
+          message: 'Error al cargar los productos',
+          error,
         });
       });
   }
@@ -75,9 +80,10 @@ export class InvoiceComponent implements OnInit {
         });
       })
       .catch((error) => {
-        //console.log(error);
-        toast.error('Facturas', {
-          description: error.error.error || 'Error al cargar, por favor recargar la página',
+        this.validateErrorResponse({
+          feature: 'Facturas',
+          message: 'Error al cargar las facturas',
+          error,
         });
       });
   }
@@ -92,9 +98,10 @@ export class InvoiceComponent implements OnInit {
         });
       })
       .catch((error) => {
-        //console.log(error);
-        toast.error('Facturas', {
-          description: error.error.error || 'Error al guardar, Por favor intente de nuevo',
+        this.validateErrorResponse({
+          feature: 'Facturas',
+          message: 'Error al crear la factura',
+          error,
         });
       });
   }
@@ -109,9 +116,10 @@ export class InvoiceComponent implements OnInit {
         });
       })
       .catch((error) => {
-        //console.log(error);
-        toast.error('Facturas', {
-          description: error.error.error || 'Error al eliminar, Por favor intente de nuevo',
+        this.validateErrorResponse({
+          feature: 'Facturas',
+          message: 'Error al eliminar la factura',
+          error,
         });
       });
     this.openModalToDeleteInvoice.set(false);
@@ -129,7 +137,7 @@ export class InvoiceComponent implements OnInit {
       .catch((error) => {
         // console.log(error);
         toast.error('Recalculo', {
-          description: error.error.error || 'Error al recalcular, Por favor intente de nuevo',
+          description: error.message || 'Error al recalcular, Por favor intente de nuevo',
         });
       });
   }
@@ -166,5 +174,19 @@ export class InvoiceComponent implements OnInit {
 
   closeModalConfirmDeleteInvoice() {
     this.openModalToDeleteInvoice.set(false);
+  }
+
+  private validateErrorResponse({ feature, message, error }: TValidateError): void {
+    // console.log(error);
+    let errorToShow;
+    if (error.status === 0 || error.message.includes('Unknown Error')) {
+      errorToShow = 'Error de conexión, por favor recargar la página';
+    } else {
+      errorToShow = message || error.message;
+    }
+
+    toast.error(feature, {
+      description: errorToShow,
+    });
   }
 }
