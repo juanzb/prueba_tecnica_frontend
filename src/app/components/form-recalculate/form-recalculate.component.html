@@ -160,13 +160,7 @@
         </div>
         <button
           (click)="saveRecalculate()"
-          [disabled]="validateError !== null"
-          class="w-full py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed outline-none cursor-pointer"
-          [class]="
-            validateError === null
-              ? 'bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:bg-indigo-500/30 hover:text-indigo-200 hover:border-indigo-400'
-              : 'bg-white/5 border border-white/10 text-slate-500'
-          "
+          class="w-full py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed outline-none cursor-pointer 'bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:bg-indigo-500/30 hover:text-indigo-200 hover:border-indigo-400'"
         >
           Guardar Recálculo
         </button>

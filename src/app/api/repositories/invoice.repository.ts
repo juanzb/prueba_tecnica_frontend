@@ -6,24 +6,28 @@ import {
   IRecalculatedInvoice,
   IUpdateInvoice,
 } from '../../interfaces/IInvoices';
+import { IApiResponse } from '../../interfaces/IApiResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InvoiceRepository extends BaseApiService {
-  getInvoices(endpoint = 'invoices'): Promise<IInvoice[]> {
-    return this.get<IInvoice[]>(endpoint);
+  getInvoices(endpoint = 'invoices'): Promise<IApiResponse<IInvoice[]>> {
+    return this.get<IApiResponse<IInvoice[]>>(endpoint);
   }
 
-  deleteInvoices(endpoint = 'invoices'): Promise<IInvoice[]> {
-    return this.delete<IInvoice[]>(endpoint);
+  deleteInvoices(endpoint = 'invoices'): Promise<IApiResponse<IInvoice>> {
+    return this.delete<IApiResponse<IInvoice>>(endpoint);
   }
 
-  createInvoice(invoice: ICreateInvoice, endpoint = 'invoices'): Promise<IInvoice> {
-    return this.post<IInvoice>(endpoint, invoice);
+  createInvoice(invoice: ICreateInvoice, endpoint = 'invoices'): Promise<IApiResponse<IInvoice>> {
+    return this.post<IApiResponse<IInvoice>>(endpoint, invoice);
   }
 
-  saveRecalculateInvoice(invoice: IRecalculatedInvoice, endpoint = 'invoices'): Promise<IInvoice> {
-    return this.put<IInvoice>(endpoint, invoice);
+  saveRecalculateInvoice(
+    invoice: IRecalculatedInvoice,
+    endpoint = 'invoices',
+  ): Promise<IApiResponse<IInvoice>> {
+    return this.put<IApiResponse<IInvoice>>(endpoint, invoice);
   }
 }

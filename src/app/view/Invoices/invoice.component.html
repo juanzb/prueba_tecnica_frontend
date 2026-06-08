@@ -195,13 +195,3 @@
     (confirmedButton)="deleteInvoice()"
   />
 }
-
-@if (this.isError()) {
-  <app-modal-confirm
-    (closeModalEvent)="this.isError.set(false)"
-    (cancelButton)="this.isError.set(false)"
-    (confirmedButton)="this.isError.set(false)"
-    message="Problemas de conexion con el servidor"
-    [title]="'Error'"
-  />
-}

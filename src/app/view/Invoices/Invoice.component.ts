@@ -9,6 +9,12 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ModalConfirmComponent } from '@components/ui/modal-confirm/modal-confirm.component';
 import { FromInvoiceComponent } from '@components/form-invoice/formInvoice';
 import { FormRecalculateComponent } from '@components/form-recalculate/form-recalculate.component';
+import { toast } from 'ngx-sonner';
+
+type InvoiceUpdateAction =
+  | { type: 'add'; payload: IInvoice }
+  | { type: 'recalculate'; payload: IInvoice }
+  | { type: 'delete'; payload: number }; // Solo pedimos el ID aquí
 
 @Component({
   selector: 'app-invoice',
@@ -45,34 +51,105 @@ export class InvoiceComponent implements OnInit {
   findDataProducts() {
     this.productRepository
       .getProducts()
-      .then((data) => {
-        this.dataProducts.set(data);
+      .then((res) => {
+        toast.success('Productos', {
+          description: 'Productos cargados correctamente',
+        });
+        this.dataProducts.set(res.data);
       })
       .catch((error) => {
-        this.isError.set(true);
+        //console.log(error);
+        toast.error('Productos', {
+          description: error.error.error || 'Error al cargar, por favor recargar la página',
+        });
       });
   }
 
   findDataInvoices() {
     this.invoiceRepository
       .getInvoices()
-      .then((data) => {
-        this.dataInvoices.set(data);
+      .then((res) => {
+        this.dataInvoices.set(res.data);
+        toast.success('Facturas', {
+          description: res.message,
+        });
       })
       .catch((error) => {
-        this.isError.set(true);
+        //console.log(error);
+        toast.error('Facturas', {
+          description: error.error.error || 'Error al cargar, por favor recargar la página',
+        });
       });
   }
 
   createInvoice(invoice: ICreateInvoice) {
     this.invoiceRepository
       .createInvoice(invoice)
-      .then(() => {
-        this.findDataInvoices();
+      .then((res) => {
+        this.refreshInvoices({ type: 'add', payload: res.data });
+        toast.success('Facturas', {
+          description: res.message,
+        });
       })
       .catch((error) => {
-        this.isError.set(true);
+        //console.log(error);
+        toast.error('Facturas', {
+          description: error.error.error || 'Error al guardar, Por favor intente de nuevo',
+        });
       });
+  }
+
+  deleteInvoice() {
+    this.invoiceRepository
+      .deleteInvoices(`invoices/${this.idInvoiceToDelete()}`)
+      .then((res) => {
+        this.refreshInvoices({ type: 'delete', payload: res.data.id });
+        toast.success('Facturas', {
+          description: res.message,
+        });
+      })
+      .catch((error) => {
+        //console.log(error);
+        toast.error('Facturas', {
+          description: error.error.error || 'Error al eliminar, Por favor intente de nuevo',
+        });
+      });
+    this.openModalToDeleteInvoice.set(false);
+  }
+
+  onRecalculate(event: IRecalculatedInvoice) {
+    this.invoiceRepository
+      .saveRecalculateInvoice(event, `invoices/${this.idInvoiceToShow()}/recalculate-save`)
+      .then((res) => {
+        this.refreshInvoices({ type: 'recalculate', payload: res.data });
+        toast.success('Recalculo', {
+          description: res.message,
+        });
+      })
+      .catch((error) => {
+        // console.log(error);
+        toast.error('Recalculo', {
+          description: error.error.error || 'Error al recalcular, Por favor intente de nuevo',
+        });
+      });
+  }
+
+  refreshInvoices(action: InvoiceUpdateAction) {
+    switch (action.type) {
+      case 'recalculate':
+        this.dataInvoices.update((prev) =>
+          prev.map((item) => (item.id === action.payload.id ? action.payload : item)),
+        );
+        break;
+
+      case 'add':
+        this.dataInvoices.update((prev) => [...prev, action.payload]);
+        break;
+
+      case 'delete':
+        this.dataInvoices.update((prev) => prev.filter((e) => e.id !== action.payload));
+        break;
+    }
   }
 
   checkInvoiceActive(event: number) {
@@ -89,24 +166,5 @@ export class InvoiceComponent implements OnInit {
 
   closeModalConfirmDeleteInvoice() {
     this.openModalToDeleteInvoice.set(false);
-  }
-
-  deleteInvoice() {
-    this.invoiceRepository.deleteInvoices(`invoices/${this.idInvoiceToDelete()}`).then(() => {
-      this.findDataInvoices();
-    });
-    this.openModalToDeleteInvoice.set(false);
-  }
-
-  onRecalculate(event: IRecalculatedInvoice) {
-    this.invoiceRepository
-      .saveRecalculateInvoice(event, `invoices/${this.idInvoiceToShow()}/recalculate-save`)
-      .then(() => {
-        this.findDataInvoices();
-        this.isRecalculate.set(false);
-      })
-      .catch((error) => {
-        this.isError.set(true);
-      });
   }
 }
