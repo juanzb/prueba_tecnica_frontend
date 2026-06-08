@@ -11,7 +11,7 @@ import { InvoiceRepository } from '../../api/repositories/invoice.repository';
   imports: [CommonModule, FormsModule, CurrencyPipe],
 })
 export class FormRecalculateComponent {
-  invoice = input.required<IInvoice>();
+  invoice = input<IInvoice>();
   onRecalculated = output<IRecalculatedInvoice>();
   userType = signal<TUserType>('OPERATOR');
   newSubtotalInput = signal<number | null>(0);
@@ -27,15 +27,17 @@ export class FormRecalculateComponent {
     if (newVal === null || newVal < 0) return 'Ingrese un subtotal válido.';
 
     const diff = newVal - inv.subtotal;
+    const absDiff = Math.abs(diff);
 
-    if (diff > 0) {
-      if (this.userType() === 'OPERATOR' && diff > 20000) {
-        return `Operador (Tipo A) solo puede incrementar hasta $20,000. (Te pasaste por ${diff - 20000})`;
-      }
-      if (this.userType() === 'SUPERVISOR' && diff > 50000) {
-        return `Supervisor (Tipo B) solo puede incrementar hasta $50,000. (Te pasaste por ${diff - 50000})`;
-      }
+    if (this.userType() === 'OPERATOR' && absDiff > 20000) {
+      const action = diff > 0 ? 'incrementar' : 'decrementar';
+      return `Operador (Tipo A) solo puede ${action} hasta $20,000. (Te pasaste por ${absDiff - 20000})`;
     }
+    if (this.userType() === 'SUPERVISOR' && absDiff > 50000) {
+      const action = diff > 0 ? 'incrementar' : 'decrementar';
+      return `Supervisor (Tipo B) solo puede ${action} hasta $50,000. (Te pasaste por ${absDiff - 50000})`;
+    }
+
     return null;
   });
 

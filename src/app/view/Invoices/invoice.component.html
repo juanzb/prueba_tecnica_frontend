@@ -177,7 +177,7 @@
       <div class="flex-1 min-h-0">
         <app-form-invoice [products]="dataProducts()" (onSave)="createInvoice($event)" />
       </div>
-    } @else if (invoiceSelected) {
+    } @else {
       <div class="flex-1 min-h-0">
         <app-form-recalculate
           [invoice]="invoiceSelected"
